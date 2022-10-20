@@ -10,7 +10,7 @@
             {
               "type": "minecraft:item",
               "quality": 1,
-              "name": "lifesteal:heart_dust_ore",
+              "name": "lifesteal:heart_ore",
               "conditions": [
                 {
                   "condition": "minecraft:match_tool",

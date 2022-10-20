@@ -1,31 +1,33 @@
 package me.modernadventurer.lifesteal.item;
 
-import me.modernadventurer.lifesteal.Loader;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.minecraft.item.FoodComponent;
+import me.modernadventurer.lifesteal.util.PolyLustUtils;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.item.Items;
 
 public class ModItems {
 
-    public static final Item HEARTDUST = registerItem("heart_dust",
-            new Item(new FabricItemSettings().group(ItemGroup.MISC)));
+    public static final Item HEARTDUST = dust();
+    public static final Item HEARTCRYSTAL = crystal();
+    public static final Item HEART = heart();
 
-    public static final Item HEARTCRYSTAL = registerItem("heart_crystal",
-            new Item(new FabricItemSettings().group(ItemGroup.MISC)));
-
-    public static final Item HEART = registerItem("heart",
-            new Item(new FabricItemSettings()
-                    .group(ItemGroup.FOOD)
-                    .food(new FoodComponent.Builder().hunger(0).saturationModifier(0).alwaysEdible().build())));
-
-    private static Item registerItem(String name, Item item) {
-        return Registry.register(Registry.ITEM, new Identifier(Loader.MOD_ID, name), item);
+    private static Item dust() {
+        return PolyLustUtils.ofModelled("heart_dust", Items.REDSTONE, ItemGroup.MISC);
     }
 
-    public static void registerModItems() {
-        System.out.println("Registering Mod Items for " + Loader.MOD_ID);
+    private static Item crystal() {
+        return PolyLustUtils.ofModelled("heart_crystal", Items.ECHO_SHARD, ItemGroup.MISC);
+    }
+
+    private static Item heart() {
+        return PolyLustUtils.ofModelled("heart", Items.POTION, ItemGroup.MISC,
+                (settings, modelData) -> new HeartItem(settings.maxCount(1), modelData));
+    }
+
+    public static void init() {
+    }
+
+    private ModItems() {
+        throw new UnsupportedOperationException();
     }
 }

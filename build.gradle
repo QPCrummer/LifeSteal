@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '0.10-SNAPSHOT'
+    id 'fabric-loom' version '1.0-SNAPSHOT'
     id 'maven-publish'
 }
 
@@ -7,11 +7,7 @@ version = project.mod_version
 group = project.maven_group
 
 repositories {
-    // Add repositories to retrieve artifacts from in here.
-    // You should only use this when depending on other mods because
-    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-    // for more information about repositories.
+    maven { url 'https://maven.nucleoid.xyz' }
 }
 
 dependencies {
@@ -22,6 +18,9 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+    modImplementation include("eu.pb4:polymer:0.2.17+1.19.2")
+    modImplementation include("fr.catcore:server-translations-api:1.4.17+1.19.2")
+    modImplementation include("eu.pb4:polymer-blocks:0.1.0-alpha.9+1.19.2")
 }
 
 processResources {
