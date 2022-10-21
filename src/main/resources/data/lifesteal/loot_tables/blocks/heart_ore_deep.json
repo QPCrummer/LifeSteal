@@ -10,7 +10,7 @@
             {
               "type": "minecraft:item",
               "quality": 1,
-              "name": "lifesteal:block/heart_ore",
+              "name": "lifesteal:block/deepslate_heart_ore",
               "conditions": [
                 {
                   "condition": "minecraft:match_tool",

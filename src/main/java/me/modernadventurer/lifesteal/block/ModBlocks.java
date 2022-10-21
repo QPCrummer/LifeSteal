@@ -1,61 +1,46 @@
 package me.modernadventurer.lifesteal.block;
 
-import eu.pb4.polymer.api.item.PolymerBlockItem;
+import eu.pb4.polymer.api.resourcepack.PolymerRPUtils;
 import eu.pb4.polymer.ext.blocks.api.BlockModelType;
-import eu.pb4.polymer.ext.blocks.api.PolymerBlockModel;
-import eu.pb4.polymer.ext.blocks.api.PolymerBlockResourceUtils;
-import eu.pb4.polymer.ext.blocks.api.PolymerTexturedBlock;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
-import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.item.Items;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
 import static me.modernadventurer.lifesteal.Loader.MOD_ID;
 
-public class ModBlocks extends Block implements PolymerTexturedBlock {
+public class ModBlocks {
 
-    public static final Identifier IDENTIFIER = new Identifier(MOD_ID, "heart_ore");
-    public static final Block HEARTDUSTORE = new ModBlocks(FabricBlockSettings
-            .of(Material.STONE)
-            .requiresTool()
-            .strength(6.0f, 6.0f)
-            .sounds(BlockSoundGroup.STONE));
-
-    public static final BlockItem HEARTDUSTOREITEM = new PolymerBlockItem(HEARTDUSTORE, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS), Items.REDSTONE_ORE);
-
-    public PolymerBlockModel blockModel = new PolymerBlockModel(new Identifier("heart_ore","block/heart_ore"),1,1,false,1);
-
-    public BlockState resourceUtils = PolymerBlockResourceUtils.requestBlock(BlockModelType.FULL_BLOCK, blockModel);
-
-    public ModBlocks(Settings settings) {
-        super(settings);
-    }
+    public static Block DEEP_BLOCK;
+    public static Block NORMAL_BLOCK;
 
     public static void registerBlocks() {
-        Registry.register(Registry.BLOCK, IDENTIFIER, HEARTDUSTORE);
-        Registry.register(Registry.ITEM, IDENTIFIER, HEARTDUSTOREITEM);
+        PolymerRPUtils.markAsRequired();
+        PolymerRPUtils.addAssetSource(MOD_ID);
+
+        register(BlockModelType.FULL_BLOCK, "block/heart_ore");
+        registerDeep(BlockModelType.FULL_BLOCK, "block/deepslate_heart_ore");
     }
 
-    @Override
-    public Block getPolymerBlock(BlockState state) {
-        return resourceUtils.getBlock();
+    public static void registerDeep(BlockModelType type, String modelId) {
+        var DEEP = new Identifier(MOD_ID, modelId);
+        DEEP_BLOCK = Registry.register(Registry.BLOCK, DEEP,
+                new DeepslateHeartOre(FabricBlockSettings.of(Material.STONE).requiresTool().strength(6.0f, 6.0f).sounds(BlockSoundGroup.DEEPSLATE), type, modelId));
+
+        Registry.register(Registry.ITEM, DEEP, new DeepslateHeartOreItem(new Item.Settings().group(ItemGroup.BUILDING_BLOCKS), DEEP_BLOCK, modelId));
     }
 
-    @Override
-    public Block getPolymerBlock(ServerPlayerEntity player, BlockState state) {
-        return resourceUtils.getBlock();
+    public static void register(BlockModelType type, String modelId) {
+        var NORMAL = new Identifier(MOD_ID, modelId);
+        NORMAL_BLOCK = Registry.register(Registry.BLOCK, NORMAL,
+                new HeartOre(FabricBlockSettings.of(Material.STONE).requiresTool().strength(6.0f, 6.0f).sounds(BlockSoundGroup.STONE), type, modelId));
+
+        Registry.register(Registry.ITEM, NORMAL, new HeartOreItem(new Item.Settings().group(ItemGroup.BUILDING_BLOCKS), NORMAL_BLOCK, modelId));
     }
 
-    @Override
-    public BlockState getPolymerBlockState(BlockState state) {
-        return resourceUtils;
-    }
+
 }
